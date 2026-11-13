@@ -28,6 +28,20 @@ module serial_adder_with_vld
   // only if vld is also high, otherwise last should be ignored.
   //
   // When rst is high, the module should reset its internal state.
+  logic carry;
+  wire carry_d;
 
+  assign { carry_d, sum } = a + b + carry;
+
+  always_ff @(posedge clk) begin
+      if (rst) begin
+          carry <= 1'b0;
+      end else if (vld) begin
+        if (last)
+          carry <= 0;
+        else
+          carry <= carry_d;
+      end
+  end
 
 endmodule
